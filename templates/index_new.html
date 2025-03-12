@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fame Chat - Azure API Integration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="menu-button">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="FAME Logo" class="logo">
+            </div>
+        </nav>
+        
+        <main class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <h1>Welcome to FAME Azure API Integration</h1>
+                    <p class="ai-description">FAME powered with AI is ready to assist you in generating full automated mode.</p>
+                    <p class="api-info">You can send up to 4 messages. Each message will be processed by a different Azure API:</p>
+                    <ul class="api-list">
+                        <li>API 1: Language Analysis</li>
+                        <li>API 2: Sentiment Analysis</li>
+                        <li>API 3: Entity Recognition</li>
+                        <li>API 4: Intent Classification</li>
+                    </ul>
+                    <p class="api-note">If you're satisfied with an API response, it will be used as input for the next API.</p>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea id="messageInput" placeholder="Message FAME AI... (4 messages max)" rows="1"></textarea>
+                    <button id="sendButton" class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Template for message with satisfaction buttons -->
+    <template id="messageTemplate">
+        <div class="message-container">
+            <div class="message">
+                <div class="message-content"></div>
+            </div>
+            <div class="satisfaction-buttons">
+                <button class="satisfaction-btn satisfied" title="Use this response for next API">
+                    <i class="fas fa-check"></i> Satisfied
+                </button>
+                <button class="satisfaction-btn not-satisfied" title="Try a different message">
+                    <i class="fas fa-times"></i> Not Satisfied
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='app_new.js') }}"></script>
+</body>
+</html>
