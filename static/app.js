@@ -6,10 +6,62 @@ const messageTemplate = document.getElementById('messageTemplate');
 const finalResultTemplate = document.getElementById('finalResultTemplate');
 const menuButton = document.getElementById('menuButton');
 const sidebar = document.querySelector('.sidebar');
+const objectSelection = document.getElementById('objectSelection');
+const closeObjectSelection = document.getElementById('closeObjectSelection');
+const objectCheckboxTemplate = document.getElementById('objectCheckboxTemplate');
 
 let currentAgent = 1;
 let lastResponse = null;
 let waitingForInput = true;
+
+// Default prompts for each agent
+const defaultPrompts = {
+    1: "The language analysis could be improved by considering:",
+    2: "The sentiment analysis missed these emotional aspects:",
+    3: "The entity recognition should also identify:",
+    4: "The intent classification should consider these aspects:"
+};
+
+// Objects for each agent
+const agentObjects = {
+    1: [
+        "Grammar and syntax",
+        "Contextual meaning",
+        "Idiomatic expressions",
+        "Technical terms",
+        "Cultural references"
+    ],
+    2: [
+        "Tone variations",
+        "Emotional undertones",
+        "Sarcasm",
+        "Cultural context",
+        "Professional tone"
+    ],
+    3: [
+        "Person names",
+        "Organizations",
+        "Locations",
+        "Date/Time",
+        "Product names"
+    ],
+    4: [
+        "User goals",
+        "Action items",
+        "Decision points",
+        "Requests",
+        "Preferences"
+    ]
+};
+
+// Common objects for all agents
+const commonObjects = [
+    "Accuracy",
+    "Clarity",
+    "Completeness",
+    "Context",
+    "Relevance"
+];
 
 // Toggle sidebar
 menuButton.addEventListener('click', () => {
@@ -56,6 +108,73 @@ function navigateToAgent(targetAgent) {
     );
 }
 
+// Show object selection with appropriate objects
+function showObjectSelection() {
+    // Clear previous objects
+    const commonObjectsList = document.getElementById('commonObjects');
+    const agentObjectsList = document.getElementById('agentObjects');
+    commonObjectsList.innerHTML = '';
+    agentObjectsList.innerHTML = '';
+    
+    // Add common objects
+    commonObjects.forEach(obj => {
+        const checkbox = createObjectCheckbox(obj, 'common');
+        commonObjectsList.appendChild(checkbox);
+    });
+    
+    // Add agent-specific objects
+    agentObjects[currentAgent].forEach(obj => {
+        const checkbox = createObjectCheckbox(obj, 'agent');
+        agentObjectsList.appendChild(checkbox);
+    });
+    
+    // Show the selection box
+    objectSelection.style.display = 'block';
+    
+    // Set default prompt
+    messageInput.value = defaultPrompts[currentAgent];
+    messageInput.style.height = 'auto';
+    messageInput.style.height = messageInput.scrollHeight + 'px';
+}
+
+// Create object checkbox element
+function createObjectCheckbox(label, type) {
+    const checkbox = objectCheckboxTemplate.content.cloneNode(true);
+    const input = checkbox.querySelector('input');
+    const labelEl = checkbox.querySelector('label');
+    
+    const id = `${type}-${label.toLowerCase().replace(/\s+/g, '-')}`;
+    input.id = id;
+    labelEl.htmlFor = id;
+    labelEl.textContent = label;
+    
+    input.addEventListener('change', () => updatePromptWithObjects());
+    
+    return checkbox;
+}
+
+// Update prompt based on selected objects
+function updatePromptWithObjects() {
+    const selectedObjects = Array.from(document.querySelectorAll('.object-checkbox input:checked'))
+        .map(input => input.nextElementSibling.textContent);
+    
+    if (selectedObjects.length > 0) {
+        const basePrompt = defaultPrompts[currentAgent];
+        const objectsList = selectedObjects.join(', ');
+        messageInput.value = `${basePrompt}\n- ${objectsList}`;
+    } else {
+        messageInput.value = defaultPrompts[currentAgent];
+    }
+    
+    messageInput.style.height = 'auto';
+    messageInput.style.height = messageInput.scrollHeight + 'px';
+}
+
+// Close object selection
+closeObjectSelection.addEventListener('click', () => {
+    objectSelection.style.display = 'none';
+});
+
 // Auto-resize textarea
 messageInput.addEventListener('input', function() {
     this.style.height = 'auto';
@@ -66,6 +185,9 @@ messageInput.addEventListener('input', function() {
 function sendMessage() {
     const message = messageInput.value.trim();
     if (message && currentAgent <= 4 && waitingForInput) {
+        // Hide object selection if visible
+        objectSelection.style.display = 'none';
+        
         // Emit the message to server
         socket.emit('sendMessage', message);
         
@@ -214,6 +336,9 @@ function handleSatisfaction(isSatisfied, buttonsContainer, responseText) {
         // Remove the AI's last message
         const lastMessage = buttonsContainer.closest('.message-container');
         lastMessage.remove();
+        
+        // Show object selection and default prompt
+        showObjectSelection();
         
         // Enable input for retry
         waitingForInput = true;

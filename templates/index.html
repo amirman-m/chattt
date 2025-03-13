@@ -59,6 +59,28 @@
             </div>
             
             <div class="input-container">
+                <div class="object-selection" id="objectSelection" style="display: none;">
+                    <div class="object-selection-header">
+                        <h3>Select Objects to Include</h3>
+                        <button class="close-button" id="closeObjectSelection">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="object-groups">
+                        <div class="object-group">
+                            <h4>Common Objects</h4>
+                            <div class="object-list" id="commonObjects">
+                                <!-- Objects will be added dynamically -->
+                            </div>
+                        </div>
+                        <div class="object-group">
+                            <h4>Agent-Specific Objects</h4>
+                            <div class="object-list" id="agentObjects">
+                                <!-- Objects will be added dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-wrapper">
                     <textarea id="messageInput" placeholder="Message FAME AI..." rows="1"></textarea>
                     <button id="sendButton" class="send-button">
@@ -97,6 +119,14 @@
                     <i class="fas fa-file-export"></i> Send to Cameo
                 </button>
             </div>
+        </div>
+    </template>
+
+    <!-- Template for object checkbox -->
+    <template id="objectCheckboxTemplate">
+        <div class="object-checkbox">
+            <input type="checkbox" id="">
+            <label for=""></label>
         </div>
     </template>
 
