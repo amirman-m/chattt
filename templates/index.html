@@ -10,33 +10,57 @@
 <body>
     <div class="app-container">
         <nav class="sidebar">
-            <div class="menu-button">
+            <div class="menu-button" id="menuButton">
                 <i class="fas fa-bars"></i>
             </div>
-            <div class="logo-container">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="FAME Logo" class="logo">
+            <div class="agent-navigation">
+                <button class="agent-btn" data-agent="1">
+                    <i class="fas fa-robot"></i>
+                    <span>Agent 1</span>
+                    <div class="agent-description">Language Analysis</div>
+                </button>
+                <button class="agent-btn" data-agent="2">
+                    <i class="fas fa-robot"></i>
+                    <span>Agent 2</span>
+                    <div class="agent-description">Sentiment Analysis</div>
+                </button>
+                <button class="agent-btn" data-agent="3">
+                    <i class="fas fa-robot"></i>
+                    <span>Agent 3</span>
+                    <div class="agent-description">Entity Recognition</div>
+                </button>
+                <button class="agent-btn" data-agent="4">
+                    <i class="fas fa-robot"></i>
+                    <span>Agent 4</span>
+                    <div class="agent-description">Intent Classification</div>
+                </button>
             </div>
         </nav>
         
         <main class="chat-container">
+            <div class="chat-header">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="FAME Logo" class="logo">
+                </div>
+            </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="welcome-message">
                     <h1>Welcome to FAME Azure API Integration</h1>
                     <p class="ai-description">FAME powered with AI is ready to assist you in generating full automated mode.</p>
-                    <p class="api-info">You can send up to 4 messages. Each message will be processed by a different Azure API:</p>
+                    <p class="api-info">Your messages will be processed sequentially by our Azure APIs:</p>
                     <ul class="api-list">
                         <li>API 1: Language Analysis</li>
                         <li>API 2: Sentiment Analysis</li>
                         <li>API 3: Entity Recognition</li>
                         <li>API 4: Intent Classification</li>
                     </ul>
-                    <p class="api-note">If you're satisfied with an API response, it will be used as input for the next API.</p>
+                    <p class="api-note">For each response, you can choose to be "Satisfied" (response will be used as input for the next API) or "Not Satisfied" (modify and retry with the current API).</p>
                 </div>
             </div>
             
             <div class="input-container">
                 <div class="input-wrapper">
-                    <textarea id="messageInput" placeholder="Message FAME AI... (4 messages max)" rows="1"></textarea>
+                    <textarea id="messageInput" placeholder="Message FAME AI..." rows="1"></textarea>
                     <button id="sendButton" class="send-button">
                         <i class="fas fa-paper-plane"></i>
                     </button>
@@ -62,7 +86,21 @@
         </div>
     </template>
 
+    <!-- Template for final result with Cameo button -->
+    <template id="finalResultTemplate">
+        <div class="message-container final-result">
+            <div class="message system final-response">
+                <div class="message-content"></div>
+            </div>
+            <div class="cameo-button-container">
+                <button class="cameo-btn" title="Save responses to JSON file">
+                    <i class="fas fa-file-export"></i> Send to Cameo
+                </button>
+            </div>
+        </div>
+    </template>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='app_new.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
